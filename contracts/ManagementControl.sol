@@ -10,13 +10,13 @@ enum Role {
   SECRETARY,
   DEPUTY
 }
-contract ManagementControl is AccessControlEnumerable {
+abstract contract ManagementControl is AccessControlEnumerable {
     bytes32 public constant LEAD_LINK = keccak256("LEAD_LINK");
     bytes32 public constant TECH_EXEC = keccak256("TECH_EXEC");
     bytes32 public constant GOVERNANCE_CIRCLE = keccak256("GOVERNANCE_CIRCLE");
     bytes32 public constant SECRETARY = keccak256("SECRETARY");
     bytes32 public constant DEPUTY = keccak256("DEPUTY");
-  constructor() public {
+  constructor() internal {
     _grantRole(LEAD_LINK, msg.sender);
     _grantRole(TECH_EXEC, msg.sender);
     _grantRole(GOVERNANCE_CIRCLE, msg.sender);
