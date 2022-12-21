@@ -1,0 +1,16 @@
+{
+    "who": {
+        "name": "Example DAO",
+        "daoId": 1,
+    },
+    "what": {
+        "purpose": "We are here to set an example for others",
+        "measure-of-success": "Others may create their DAO's URI Metadata using this template",
+        "motd": "Lead by example!",
+        "motd-acronym": "Motto of the DAO",
+    },
+    "where": {
+        "website": "http://example.com",
+        "twitter": "example",
+    }
+}
