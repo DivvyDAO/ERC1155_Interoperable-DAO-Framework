@@ -16,7 +16,7 @@ abstract contract ManagementControl is AccessControlEnumerable {
     bytes32 public constant GOVERNANCE_CIRCLE = keccak256("GOVERNANCE_CIRCLE");
     bytes32 public constant SECRETARY = keccak256("SECRETARY");
     bytes32 public constant DEPUTY = keccak256("DEPUTY");
-  constructor() internal {
+  constructor() {
     _grantRole(LEAD_LINK, msg.sender);
     _grantRole(TECH_EXEC, msg.sender);
     _grantRole(GOVERNANCE_CIRCLE, msg.sender);
