@@ -16,5 +16,12 @@ Requirements
 
 [-] Create Standard Metadata URI Example
 
-[-] Build Drupal Module
+[-] Build Dyvvy DAO Drupal Module: DAO-specific Token Explorer (From Mint-to-Burn), Web 2.0 .json (think URI), Roster/Address Explorer, 
+
+[-] Make Upgradeable
+
+[-] Upgrade idea- Update Manager count from 5 to adjustable
+
+[-] CreateDAO payable at 0.0025 ether, all transactions are done via Dyvvy member tokens daoId[1]
+
 
