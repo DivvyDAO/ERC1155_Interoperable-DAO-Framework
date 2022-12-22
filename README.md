@@ -1,8 +1,10 @@
 ## Dyvvy Dao ##
 
-** Diversity of Thought
-** Singleness of Purpose
-** Freedom of Action
+* Diversity of Thought
+
+* Singleness of Purpose
+
+* Freedom of Action
 
 Requirements
 
