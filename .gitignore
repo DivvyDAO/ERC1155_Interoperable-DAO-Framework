@@ -1,0 +1,26 @@
+# Ignore npm cache directory
+.npm
+
+# Ignore node_modules directory
+node_modules/
+
+# Ignore compiled source code
+*.js
+
+# Ignore configuration files
+.env
+.eslintrc
+.prettierrc
+.vscode/
+
+# Ignore logs
+*.log
+
+# Ignore distribution directory
+dist/
+
+# Ignore compiled test files
+*.test.js
+
+# Ignore coverage reports
+coverage/
