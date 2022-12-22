@@ -6,14 +6,14 @@ import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "./ManagementControl.sol";
 
-contract Dyvvy is ManagementControl, ERC1155Burnable, ERC1155Supply, ERC1155URIStorage {
+contract Trustless is ManagementControl, ERC1155Burnable, ERC1155Supply, ERC1155URIStorage {
   
   uint128 _daoCount;
   mapping(string => uint256) private _daoNametoId;
   mapping(uint256 => string) private _tokenURIs;
   mapping(uint256 => uint256) private _totalSupply;
 
-  constructor() ERC1155("Dyvvy.com") {
+  constructor() ERC1155("TrustlessTokens.com") {
     _daoCount = 0;
     _mint(msg.sender, _daoCount, 100000, "");
     _daoCount += 7;
