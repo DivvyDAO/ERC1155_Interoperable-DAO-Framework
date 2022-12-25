@@ -1,17 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.7.4 <0.9.0;
 
-import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
-import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "./ManagementControl.sol";
 
-contract DAO is ManagementControl, ERC1155Burnable, ERC1155Supply, ERC1155URIStorage {
+contract DAO is ManagementControl, ERC1155Burnable {
   
   uint128 public _daoCount = 0;
   mapping(string => uint256) public _daoNametoId;
   mapping(uint256 => string) public _tokenURIs;
-  mapping(uint256 => uint256) public _totalSupply;
 
   constructor() ERC1155("TrustlessDAO.net") {
     createDao("Trustless DAO", 100000, "TrustlessDAO.net/metadata");
@@ -22,38 +19,27 @@ contract DAO is ManagementControl, ERC1155Burnable, ERC1155Supply, ERC1155URISto
 
   // Obligatory Overrides
  
-  function _beforeTokenTransfer(
-        address,
-        address,
-        address,
-        uint256[] memory,
-        uint256[] memory,
-        bytes memory
-    ) override(ERC1155, ERC1155Supply) internal virtual view  {
-        ERC1155Supply._beforeTokenTransfer;
-    }
-
   function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControlEnumerable, ERC1155) returns (bool) {
         return ERC1155.supportsInterface(interfaceId);
     }
 
-  function uri(uint256 tokenId) public view virtual override(ERC1155, ERC1155URIStorage) returns (string memory) {
-        return ERC1155URIStorage.uri(tokenId);
+  function uri(uint256 tokenId) public view virtual override(ERC1155) returns (string memory) {
+        return _tokenURIs[tokenId];
     }
 
   function createDao(string memory daoName, uint256 initialSupplyMint, string memory _uri) public returns (uint256 daoCount) {
-    _mint(msg.sender, _daoCount*2, initialSupplyMint, "0x0");
+    super._mint(msg.sender, _daoCount, initialSupplyMint, "0x0");
     _daoNametoId[daoName] = _daoCount;
-    _tokenURIs[_daoCount*2] = _uri;
+    _tokenURIs[_daoCount] = _uri;
     _daoCount++;
     return daoCount;
   }
 
 
   function createDaowithExtradata(string memory daoName, uint256 initialSupplyMint, string memory _uri, bytes memory data) public returns (uint256 daoCount) {
-    _mint(msg.sender, _daoCount*2, initialSupplyMint, data);
+    super._mint(msg.sender, _daoCount, initialSupplyMint, data);
     _daoNametoId[daoName] = _daoCount;
-    _tokenURIs[_daoCount*2] = _uri;
+    _tokenURIs[_daoCount] = _uri;
     _daoCount++;
     return daoCount;
   }
@@ -63,7 +49,7 @@ contract DAO is ManagementControl, ERC1155Burnable, ERC1155Supply, ERC1155URISto
     onlyRole(TECH_EXEC)
   {
     if(id < 128) revert("Id out of range");
-    _mint(account, id, amount, data);
+    super._mint(account, id, amount, data);
   }
 
   function mintDAOManagerTokens(uint256 id, address account, uint256 amount, bytes memory data)
@@ -71,6 +57,54 @@ contract DAO is ManagementControl, ERC1155Burnable, ERC1155Supply, ERC1155URISto
     onlyRole(TECH_EXEC)
   {
     if(id < 128) revert("Id out of range");
-    _mint(account, id, amount, data);
+    super._mint(account, id, amount, data);
   }
+
+  mapping(uint256 => uint256) private _totalSupply;
+
+    /**
+     * @dev Total amount of tokens in with a given id.
+     */
+    function totalSupply(uint256 id) public view virtual returns (uint256) {
+        return _totalSupply[id];
+    }
+
+    /**
+     * @dev Indicates whether any token exist with a given id, or not.
+     */
+    function exists(uint256 id) public view virtual returns (bool) {
+        return totalSupply(id) > 0;
+    }
+
+    /**
+     * @dev See {ERC1155-_beforeTokenTransfer}.
+     */
+    function _beforeTokenTransfer(
+        address operator,
+        address from,
+        address to,
+        uint256[] memory ids,
+        uint256[] memory amounts,
+        bytes memory data
+    ) internal virtual override {
+        super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
+
+        if (from == address(0)) {
+            for (uint256 i = 0; i < ids.length; ++i) {
+                _totalSupply[ids[i]] += amounts[i];
+            }
+        }
+
+        if (to == address(0)) {
+            for (uint256 i = 0; i < ids.length; ++i) {
+                uint256 id = ids[i];
+                uint256 amount = amounts[i];
+                uint256 supply = _totalSupply[id];
+                require(supply >= amount, "ERC1155: burn amount exceeds totalSupply");
+                unchecked {
+                    _totalSupply[id] = supply - amount;
+                }
+            }
+        }
+    }
 }
