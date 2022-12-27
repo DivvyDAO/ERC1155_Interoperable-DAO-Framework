@@ -4,7 +4,7 @@
 
 pragma solidity ^0.8.0;
 
-import "./interfaces/IDAOManagement.sol";
+import "./IDAOManagement.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
@@ -16,7 +16,7 @@ import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
  * applications may benefit from on-chain enumerability, for those cases see
  * {AccessControlEnumerable}.
  *
- * Roles are referred to by their `bytes32` identifier. These should be exposed
+ * Managers are referred to by their `bytes32` identifier. These should be exposed
  * in the external API and be unique. The best way to achieve this is by
  * using `public constant` hash digests:
  *
@@ -24,54 +24,45 @@ import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
  * bytes32 public constant MY_ROLE = keccak256("MY_ROLE");
  * ```
  *
- * Roles can be used to represent a set of permissions. To restrict access to a
- * function call, use {hasRole}:
+ * Managers can be used to represent a set of permissions. To restrict access to a
+ * function call, use {hasManager}:
  *
  * ```
  * function foo() public {
- *     require(hasRole(MY_ROLE, msg.sender));
+ *     require(hasManager(MY_ROLE, msg.sender));
  *     ...
  * }
  * ```
  *
- * Roles can be granted and revoked dynamically via the {grantRole} and
- * {revokeRole} functions. Each role has an associated admin role, and only
- * accounts that have a role's admin role can call {grantRole} and {revokeRole}.
+ * Managers can be granted and revoked dynamically via the {grantManager} and
+ * {revokeManager} functions. Each role has an associated admin role, and only
+ * accounts that have a role's admin role can call {grantManager} and {revokeManager}.
  *
  * By default, the admin role for all roles is `DEFAULT_ADMIN_ROLE`, which means
  * that only accounts with this role will be able to grant or revoke other
  * roles. More complex role relationships can be created by using
- * {_setRoleAdmin}.
+ * {_setManagerAdmin}.
  *
  * WARNING: The `DEFAULT_ADMIN_ROLE` is also its own admin: it has permission to
  * grant and revoke this role. Extra precautions should be taken to secure
  * accounts that have been granted it.
  */
 abstract contract DAOManagers is Context, IDAOManagement, ERC165 {
-    struct RoleData {
-        mapping(address => bool) members;
-        bytes32 adminRole;
-    }
 
-    mapping(uint256 => mapping(bytes32 => RoleData)) private _roles;
-
-    bytes32 public constant DEFAULT_ADMIN_ROLE = 0x00;
-    bytes32 public constant DAO_MANAGER_ROLE = keccak256("DAO_MANAGER_ROLE"); 
-    // 0xfca69b310bd19d275687ebe00b254b0772cf7a367c3f81a9a5a433f831fdc1dc
-    // Toying with the idea that the bytes32 can be dropped as all roles will be either admin or members(of management)
+    mapping(address => string) personaUri;
+    mapping(uint256 => address) owners;
+    mapping(uint256 => mapping(address => bool)) private managers;
 
     /**
-     * @dev Modifier that checks that an account has a specific role. Reverts
-     * with a standardized message including the required role.
+     * @dev Modifier that checks that an account is a Manager of the DAO. Reverts
+     * with a standardized message including the required Manager role.
      *
      * The format of the revert reason is given by the following regular expression:
      *
-     *  /^DAOManagement: account (0x[0-9a-f]{40}) is missing role (0x[0-9a-f]{64})$/
-     *
-     * _Available since v4.1._
+     *  /^DAOManagement: account (0x[0-9a-f]{40}) is missing Manager role (0x[0-9a-f]{64})$/
      */
-    modifier onlyRole(uint256 dao, bytes32 role) {
-        _checkRole(dao, role);
+    modifier onlyManager(uint256 dao) {
+        _checkManager(dao);
         _;
     }
 
@@ -83,117 +74,116 @@ abstract contract DAOManagers is Context, IDAOManagement, ERC165 {
     }
 
     /**
-     * @dev Returns `true` if `account` has been granted `role`.
+     * @dev Returns `true` if `account` has been granted `Manager role`.
      */
-    function hasRole(uint256 dao, bytes32 role, address account) public view virtual returns (bool) {
-        return _roles[dao][role].members[account];
+    function hasManager(uint256 dao, address account) public view virtual returns (bool) {
+        return managers[dao][account];
     }
 
     /**
-     * @dev Revert with a standard message if `_msgSender()` is missing `role`.
-     * Overriding this function changes the behavior of the {onlyRole} modifier.
+     * @dev Revert with a standard message if `_msgSender()` is missing `Manager role`.
+     * Overriding this function changes the behavior of the {onlyManager} modifier.
      *
-     * Format of the revert message is described in {_checkRole}.
+     * Format of the revert message is described in {_checkManager}.
      *
      * _Available since v4.6._
      */
-    function _checkRole(uint256 dao, bytes32 role) internal view virtual {
-        _checkRole(dao, role, _msgSender());
+    function _checkManager(uint256 dao) internal view virtual {
+        _checkManager(dao, _msgSender());
     }
 
     /**
-     * @dev Revert with a standard message if `account` is missing `role`.
+     * @dev Revert with a standard message if `account` is missing `Manager role`.
      *
      * The format of the revert reason is given by the following regular expression:
      *
-     *  /^AccessControl: account (0x[0-9a-f]{40}) is missing role (0x[0-9a-f]{64})$/
+     *  /^DAOManagement: account (0x[0-9a-f]{40}) is missing Manager role (0x[0-9a-f]{64})$/
      */
-    function _checkRole(uint256 dao, bytes32 role, address account) internal view virtual {
-        if (!hasRole(dao, role, account)) {
+    function _checkManager(uint256 dao, address account) internal view virtual {
+        if (!hasManager(dao, account)) {
             revert(
                 string(
                     abi.encodePacked(
-                        "AccessControl: account ",
+                        "DAOManagement: account ",
                         Strings.toHexString(account),
-                        " is missing role ",
-                        Strings.toHexString(uint256(role), 32)
+                        " is missing Manager role. "
+                        )
                     )
-                )
-            );
+                );
         }
     }
 
     /**
-     * @dev Returns the admin role that controls `role`. See {grantRole} and
-     * {revokeRole}.
+     * @dev Returns the owner role that controls `Manager role`. See {grantManager} and
+     * {revokeManager}.
      *
-     * To change a role's admin, use {_setRoleAdmin}.
+     * To change a Manager role's owner, use {_setManagerAdmin}.
      */
-    function getRoleAdmin(uint256 dao, bytes32 role) public view virtual returns (bytes32) {
-        return _roles[dao][role].adminRole;
+    function getManagerAdmin(uint256 dao) public view virtual returns (address) {
+        return owners[dao];
     }
 
     /**
-     * @dev Grants `role` to `account`.
+     * @dev Grants `Manager role` to `account`.
      *
-     * If `account` had not been already granted `role`, emits a {RoleGranted}
+     * If `account` had not been already granted `Manager role`, emits a {ManagerGranted}
      * event.
      *
      * Requirements:
      *
-     * - the caller must have ``role``'s admin role.
+     * - the caller must have ``Manager role``'s owner role.
      *
-     * May emit a {RoleGranted} event.
+     * May emit a {ManagerGranted} event.
      */
-    function grantRole(uint256 dao, bytes32 role, address account) public virtual onlyRole(dao, getRoleAdmin(dao, role)) {
-        _grantRole(dao, role, account);
+    function grantManager(uint256 dao, address account) public virtual onlyManager(dao) {
+        _grantManager(dao, account);
     }
 
     /**
-     * @dev Revokes `role` from `account`.
+     * @dev Revokes `Manager role` from `account`.
      *
-     * If `account` had been granted `role`, emits a {RoleRevoked} event.
+     * If `account` had been granted `Manager role`, emits a {ManagerRevoked} event.
      *
      * Requirements:
      *
-     * - the caller must have ``role``'s admin role.
+     * - the caller must have ``Manager role``'s owner role.
      *
-     * May emit a {RoleRevoked} event.
+     * May emit a {ManagerRevoked} event.
      */
-    function revokeRole(uint256 dao, bytes32 role, address account) public virtual onlyRole(dao, getRoleAdmin(dao, role)) {
-        _revokeRole(dao, role, account);
+    function revokeManager(uint256 dao, address account) public virtual onlyManager(dao) {
+        _revokeManager(dao, account);
     }
 
     /**
-     * @dev Revokes `role` from the calling account.
+     * @dev Revokes `Manager role` from the calling account.
      *
-     * Roles are often managed via {grantRole} and {revokeRole}: this function's
+     * Managers are often managed via {grantManager} and {revokeManager}: this function's
      * purpose is to provide a mechanism for accounts to lose their privileges
      * if they are compromised (such as when a trusted device is misplaced).
      *
-     * If the calling account had been revoked `role`, emits a {RoleRevoked}
+     * If the calling account had been revoked `Manager role`, emits a {ManagerRevoked}
      * event.
      *
      * Requirements:
      *
      * - the caller must be `account`.
      *
-     * May emit a {RoleRevoked} event.
+     * May emit a {ManagerRevoked} event.
      */
-    function renounceRole(uint256 dao, bytes32 role, address account) public virtual {
+    function renounceManager(uint256 dao, address account) public virtual {
         require(account == _msgSender(), "DAOManagement: can only renounce roles for self");
 
-        _revokeRole(dao, role, account);
+        _revokeManager(dao, account);
     }
 
     /**
-     * @dev Grants `role` to `account`.
+     * @dev Grants `Manager role` to `account`.
      *
-     * If `account` had not been already granted `role`, emits a {RoleGranted}
-     * event. Note that unlike {grantRole}, this function doesn't perform any
+     * If `account` had not been already granted `Manager role`, emits a {ManagerGranted}
+     * event. Note that unlike {grantManager}, this function doesn't perform any
      * checks on the calling account.
      *
-     * May emit a {RoleGranted} event.
+     * May emit a {ManagerGranted} event.
      *
      * [WARNING]
      * ====
@@ -204,48 +194,48 @@ abstract contract DAOManagers is Context, IDAOManagement, ERC165 {
      * system imposed by {AccessControl}.
      * ====
      *
-     * NOTE: This function is deprecated in favor of {_grantRole}.
+     * NOTE: This function is deprecated in favor of {_grantManager}.
      */
-    function _setupRole(uint256 dao, bytes32 role, address account) internal virtual {
-        _grantRole(dao, role, account);
+    function _setupManager(uint256 dao, address account) internal virtual {
+        _grantManager(dao, account);
     }
 
     /**
-     * @dev Sets `adminRole` as ``role``'s admin role.
+     * @dev Sets `adminManager` as ``Manager role``'s admin role.
      *
-     * Emits a {RoleAdminChanged} event.
+     * Emits a {ManagerAdminChanged} event.
      */
-    function _setRoleAdmin(uint256 dao, bytes32 role, bytes32 adminRole) internal virtual {
-        bytes32 previousAdminRole = getRoleAdmin(dao, role);
-        _roles[dao][role].adminRole = adminRole;
-        emit RoleAdminChanged(dao, role, previousAdminRole, adminRole);
+    function _setManagerAdmin(uint256 dao, address adminManager) internal virtual {
+        address previousAdminManager = getManagerAdmin(dao);
+        owners[dao] = adminManager;
+        emit ManagerAdminChanged(dao, previousAdminManager, adminManager);
     }
 
     /**
-     * @dev Grants `role` to `account`.
+     * @dev Grants `Manager role` to `account`.
      *
      * Internal function without access restriction.
      *
-     * May emit a {RoleGranted} event.
+     * May emit a {ManagerGranted} event.
      */
-    function _grantRole(uint256 dao, bytes32 role, address account) internal virtual {
-        if (!hasRole(dao, role, account)) {
-            _roles[dao][role].members[account] = true;
-            emit RoleGranted(dao, role, account, _msgSender());
+    function _grantManager(uint256 dao, address account) internal virtual {
+        if (!hasManager(dao, account)) {
+            managers[dao][account] = true;
+            emit ManagerGranted(dao, account, _msgSender());
         }
     }
 
     /**
-     * @dev Revokes `role` from `account`.
+     * @dev Revokes `Manager role` from `account`.
      *
      * Internal function without access restriction.
      *
-     * May emit a {RoleRevoked} event.
+     * May emit a {ManagerRevoked} event.
      */
-    function _revokeRole(uint256 dao, bytes32 role, address account) internal virtual {
-        if (hasRole(dao, role, account)) {
-            _roles[dao][role].members[account] = false;
-            emit RoleRevoked(dao, role, account, _msgSender());
+    function _revokeManager(uint256 dao, address account) internal virtual {
+        if (hasManager(dao, account)) {
+            managers[dao][account] = false;
+            emit ManagerRevoked(dao, account, _msgSender());
         }
     }
 }
