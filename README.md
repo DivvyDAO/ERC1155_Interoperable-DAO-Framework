@@ -1,12 +1,14 @@
 # Trustless DAO
 
-Welcome to Trustless DAO, a revolutionary smart contract to be deployed on the Polygon blockchain. Our contract adheres to the ERC1155 standard, which allows for the efficient and flexible handling of multiple assets within a single contract. Your benefits are twofold! First, you can create your DAO on our platform without deploying any code whatsoever, potentially saving thousands in gas fees. Secondly, DAO managers may mint DAO tokens to multiple addresses with a single call, making it easier to track and transact with them than using ERC20.  
+Welcome to Trustless DAO, a revolutionary smart contract to be deployed on the Polygon blockchain. Our contract, while novel, adheres to the ERC1155 standard which allows for the efficient and flexible handling of multiple assets within a single contract. In our case the assets are DAO-tokens. Your benefits are twofold! First, you can create and manage your DAO-tokens on our platform without deploying any code whatsoever, potentially saving thousands in gas fees and absolutely saving thousands in development expenses! Secondly, we feature the ability for DAO managers to mint DAO-tokens to multiple addresses within a single call, making it easier to track and transact with them than using the legacy ERC20-standard for DAO -tokens. 
 
-The Platform hosts the scaffolding for an interoperable DAO network, allowing Trustless DAO “proper” to take advantage of the collective intelligence and resources of the entire network, making it a powerful and reliable platform for decentralized decision-making and collaboration.  
+Our platform presents the scaffolding for an interoperable DAO network, allowing Trustless DAO “proper” to leverage the collective intelligence and resources of the entire network, making it a powerful, reliable, and practical tool for decentralized decision-making and collaboration. 
 
-We are currently developing a standard metadata URI, web 2.0 and 3.0 tools, as well as a standard hook system which allows it to seamlessly communicate and interact with other smart contracts and organizations. In addition, Trustless DAO is designed with future upgradability in mind. We understand that the needs and demands of our users may change over time, and we want to make sure that our contract is able to evolve and adapt to these changes. That's why we have implemented a robust and transparent upgrade process, allowing us to continuously improve and optimize the functionality and performance of our contract. 
+We understand that the needs and demands of our users are likely to change over time, and we want to make sure that our contract can evolve and will adapt to these changes. That's why we have implemented a robust and transparent upgrade process, allowing us to continuously improve and optimize the functionality and performance of our contract.  
 
-Thank you for choosing Trustless DAO. We look forward to supporting your decentralized decision-making and asset management needs.
+With that in mind, our current plan adheres to EIP-4824 standard for URI and metadata conformity, researching further various web 2.0 and 3.0 tools, and borrowing from https://github.com/orbmis/smart-contract-event-hooks to develop an internally standard hook system which would allow Trustless DAOs to not only add custom features but also effectively communicate and interact with other smart contracts and organizations. In addition, Trustless DAO is designed with future upgradability in mind. 
+
+### Thank you for choosing Trustless DAO. We look forward to supporting your decentralized decision-making and asset management needs. 
 
 * Diversity of Thought
 
