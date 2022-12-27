@@ -1,4 +1,4 @@
-# Trustless DAO#
+# Trustless DAO
 
 Welcome to Trustless DAO, a revolutionary smart contract to be deployed on the Polygon blockchain. Our contract adheres to the ERC1155 standard, which allows for the efficient and flexible handling of multiple assets within a single contract. Your benefits are twofold! First, you can create your DAO on our platform without deploying any code whatsoever, potentially saving thousands in gas fees. Secondly, DAO managers may mint DAO tokens to multiple addresses with a single call, making it easier to track and transact with them than using ERC20.  
 
