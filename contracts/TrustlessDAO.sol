@@ -71,7 +71,7 @@ contract Trustless_DAO is DAOManagers, ERC1155Burnable {
     super._mint(msg.sender, _daoCount, initialSupplyMint, "0x0");
     _daoNametoId[daoName] = _daoCount;
     _tokenURIs[_daoCount] = _uri;
-    _grantRole(_daoCount, keccak256("DAO_MANAGER_ROLE"), msg.sender);
+    _grantManager(_daoCount, msg.sender);
     _daoCount++;
     return daoCount;
   }
@@ -80,14 +80,14 @@ contract Trustless_DAO is DAOManagers, ERC1155Burnable {
     super._mint(msg.sender, _daoCount, initialSupplyMint, data);
     _daoNametoId[daoName] = _daoCount;
     _tokenURIs[_daoCount] = _uri;
-    _grantRole(_daoCount, keccak256("DAO_MANAGER_ROLE"), msg.sender);
+    _grantManager(_daoCount, msg.sender);
     _daoCount++;
     return daoCount;
   }
 
   function mintDAOtokens(uint256 id, address account, uint256 amount, bytes memory data)
     public
-    onlyRole(id, DAO_MANAGER_ROLE)
+    onlyManager(id)
   {
     if(id > 2^128) revert("Id out of range, these are Manager Tokens");
     super._mint(account, id, amount, data);
@@ -95,7 +95,7 @@ contract Trustless_DAO is DAOManagers, ERC1155Burnable {
 
   function mintDAOManagerTokens(uint256 id, address account, uint256 amount, bytes memory data) //thinking about removing the managertokens and making a simpleManagerVote without them
     public
-    onlyRole(id, DAO_MANAGER_ROLE)
+    onlyManager(id)
   {
     if(id < 2^128) revert("Id out of range, these are Member Tokens");
     super._mint(account, id, amount, data);
