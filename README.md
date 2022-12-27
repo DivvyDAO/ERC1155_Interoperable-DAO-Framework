@@ -34,3 +34,8 @@ Requirements
 
 [-] CreateDAO payable at 0.0025 ether, all transactions are done via Dyvvy member tokens daoId[1]
 
+[-] Create manager Vote
+
+[-] Build updateURI function onlyManager
+
+[-] Build Identity claims for users //think uport
