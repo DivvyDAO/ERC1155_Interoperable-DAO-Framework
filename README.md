@@ -26,7 +26,7 @@ Requirements
 
 [-] Create Standard Metadata URI Example
 
-[-] Build Dyvvy DAO Drupal Module: DAO-specific Token Explorer (From Mint-to-Burn), Web 2.0 .json (think URI), Roster/Address Explorer, 
+[-] Build DAONation Drupal Module: DAO-specific Token Explorer (From Mint-to-Burn), Web 2.0 .json (think URI), Roster/Address Explorer, 
 
 [-] Make Upgradeable
 
