@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: Proprietary
 pragma solidity >=0.8.0 <0.9.0;
 
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
@@ -10,13 +10,20 @@ contract DAONation is DAOManagers, ERC1155Burnable {
   mapping(string => uint256) private _daoNametoId;
   mapping(uint256 => string) public _tokenURIs;
   mapping(uint256 => uint256) private _totalSupply;
+  struct qtyAddress {
+    uint quantity;
+    address client;
+  }
+  mapping(uint256 => mapping(uint256 => qtyAddress)) public tokenPuts; // m(dao => m($ => address))
+  mapping(uint256 => mapping(uint256 => qtyAddress)) public tokenCalls;
+  mapping(address => mapping(uint256 => uint256)) internal _lockedTokens;
 
-    constructor() ERC1155("DAONation.com") payable {
-      createDao("DAO Nation", 100000, "http://DAONation.com/metadata/DAONation.json");
+  constructor() ERC1155("DAONation.com") payable {
+    createDao("DAO Nation", 100000, "http://DAONation.com/metadata/DAONation.json");
       
-    }
+  }
 
-    function sendWeiToOwner(uint256 _amount) public {
+    function sendWeiToOwner(uint256 _amount) onlyOwner(0) public {
       address payable owner = payable(_getManagerAdmin(0));
       owner.transfer(_amount);
     }
@@ -120,5 +127,24 @@ contract DAONation is DAOManagers, ERC1155Burnable {
     */
   function exists(uint256 id) public view virtual returns (bool) {
       return totalSupply(id) > 0;
+  }
+
+  function sellTokens(uint256 id, uint256 quantity, uint256 value) public {
+    _lockTokens(id, quantity);
+    // _checkCalls
+    tokenPuts[id][value].quantity = quantity;
+    tokenPuts[id][value].client = msg.sender;
+
+  }
+
+  function buyTokens(uint256 id, uint256 quantity, uint256 value) public payable {
+    _lockTokens(id, quantity);
+    //checkPuts
+    tokenCalls[id][value].quantity = quantity;
+    tokenCalls[id][value].client = msg.sender;
+  }
+
+  function _lockTokens(uint256 id, uint256 quantity) internal {
+    require(balanceOf(msg.sender, id) >= quantity, "ERC1155Tradable: Sender does not own enough tokens.");
   }
 }
