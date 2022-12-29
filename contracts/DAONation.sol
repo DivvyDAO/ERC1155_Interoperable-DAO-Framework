@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: Proprietary
-pragma solidity >=0.8.0 <0.9.0;
+
+pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "./DAOManagement.sol";
 
-contract DAONation is DAOManagers, ERC1155Burnable {
+contract DAONation is DAOManagement, ERC1155Burnable {
   
   uint128 public _daoCount = 0;
   mapping(string => uint256) private _daoNametoId;
@@ -24,13 +25,13 @@ contract DAONation is DAOManagers, ERC1155Burnable {
   }
 
     function sendWeiToOwner(uint256 _amount) onlyOwner(0) public {
-      address payable owner = payable(_getManagerAdmin(0));
+      address payable owner = payable(owners[0]);
       owner.transfer(_amount);
     }
 
     // Obligatory Overrides
   
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC1155, DAOManagers) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC1155, DAOManagement) returns (bool) {
       return ERC1155.supportsInterface(interfaceId);
     }
 
@@ -63,6 +64,7 @@ contract DAONation is DAOManagers, ERC1155Burnable {
                 uint256 amount = amounts[i];
                 uint256 supply = _totalSupply[id];
                 require(supply >= amount, "ERC1155: burn amount exceeds totalSupply");
+                require((supply - _lockedTokens[msg.sender][id]) >= amount, "DAONation: burn amount would burn locked tokens");
                 unchecked {
                     _totalSupply[id] = supply - amount;
                 }
@@ -146,5 +148,6 @@ contract DAONation is DAOManagers, ERC1155Burnable {
 
   function _lockTokens(uint256 id, uint256 quantity) internal {
     require(balanceOf(msg.sender, id) >= quantity, "ERC1155Tradable: Sender does not own enough tokens.");
+    _lockedTokens[msg.sender][id] = quantity;
   }
 }
