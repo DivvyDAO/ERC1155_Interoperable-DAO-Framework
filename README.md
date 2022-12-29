@@ -6,7 +6,7 @@ Our platform presents the scaffolding for an interoperable DAO network, allowing
 
 We understand that the needs and demands of our users are likely to change over time, and we want to make sure that our contract can evolve and will adapt to these changes. That's why we have implemented a robust and transparent upgrade process, allowing us to continuously improve and optimize the functionality and performance of our contract.  
 
-With that in mind, our current plan adheres to EIP-4824 standard for URI and metadata conformity, researching further various web 2.0 and 3.0 tools, and borrowing from https://github.com/orbmis/smart-contract-event-hooks to develop an internally standard hook system which would allow DAONation DAOs to not only add custom features but also effectively communicate and interact with other smart contracts and organizations. In addition, DAONation is designed with future upgradability in mind. 
+With that in mind, our current plan adheres to [EIP-4824 standard](https://github.com/Trustless/DAONation/blob/main/ExtendedREADME/EIP-4824.md) for URI and metadata conformity, researching further various web 2.0 and 3.0 tools, and borrowing from https://github.com/orbmis/smart-contract-event-hooks to develop an internally standard hook system which would allow DAONation DAOs to not only add custom features but also effectively communicate and interact with other smart contracts and organizations. In addition, DAONation is designed with future upgradability in mind. 
 
 ### Thank you for choosing DAONation DAO. We look forward to supporting your decentralized decision-making and asset management needs. 
 
