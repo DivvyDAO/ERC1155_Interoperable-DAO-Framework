@@ -4,7 +4,7 @@ pragma solidity ^0.8.17;
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "./DAOManagement.sol";
 
-abstract contract DAONation is DAOManagers, ERC1155Burnable {
+contract DAONation is DAOManagement, ERC1155Burnable {
   
   uint128 public _daoCount = 0;
   mapping(string => uint256) private _daoNametoId;
@@ -24,7 +24,7 @@ abstract contract DAONation is DAOManagers, ERC1155Burnable {
   }
 
     function sendWeiToOwner(uint256 _amount) onlyOwner(0) public {
-      address payable owner = payable(_getManagerAdmin(0));
+      address payable owner = payable(owners[0]);
       owner.transfer(_amount);
     }
 
@@ -63,6 +63,7 @@ abstract contract DAONation is DAOManagers, ERC1155Burnable {
                 uint256 amount = amounts[i];
                 uint256 supply = _totalSupply[id];
                 require(supply >= amount, "ERC1155: burn amount exceeds totalSupply");
+                require(supply - _lockedTokens[msg.sender][id] >= amount, "DAONation: burn amount would burn locked tokens");
                 unchecked {
                     _totalSupply[id] = supply - amount;
                 }
