@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Proprietary
-pragma solidity >=0.7.4 <0.9.0;
+pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "./DAOManagement.sol";
@@ -144,5 +144,6 @@ abstract contract DAONation is DAOManagers, ERC1155Burnable {
 
   function _lockTokens(uint256 id, uint256 quantity) internal {
     require(balanceOf(msg.sender, id) >= quantity, "ERC1155Tradable: Sender does not own enough tokens.");
+    _lockedTokens[msg.sender][id] = quantity;
   }
 }

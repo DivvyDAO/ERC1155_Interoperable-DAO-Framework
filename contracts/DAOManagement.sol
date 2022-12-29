@@ -47,7 +47,7 @@ import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
  * grant and revoke this role. Extra precautions should be taken to secure
  * accounts that have been granted it.
  */
-abstract contract DAOManagers is Context, IDAOManagement, ERC165 {
+abstract contract DAOManagement is Context, IDAOManagement, ERC165 {
 
     mapping(address => string) personaUri;
     mapping(uint256 => address) owners;

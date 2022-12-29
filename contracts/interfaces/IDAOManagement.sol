@@ -2,7 +2,7 @@
 // Tech Enterprises Contracts v0.1 (DAOManagement.sol)
 // based on a clone of OpenZeppelin Contracts v4.4.1 (access/IAccessControl.sol)
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 /**
  * @dev External interface of DAOManagement declared to support ERC165 detection.
