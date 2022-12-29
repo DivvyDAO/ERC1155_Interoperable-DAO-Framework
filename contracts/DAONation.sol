@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.7.4 <0.9.0;
+pragma solidity >=0.8.0 <0.9.0;
 
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "./DAOManagement.sol";
 
-contract DAONation is DAOManagers, ERC1155Intrading, ERC1155Burnable {
+contract DAONation is DAOManagers, ERC1155Burnable {
   
   uint128 public _daoCount = 0;
   mapping(string => uint256) private _daoNametoId;
@@ -17,7 +17,7 @@ contract DAONation is DAOManagers, ERC1155Intrading, ERC1155Burnable {
     }
 
     function sendWeiToOwner(uint256 _amount) public {
-      address payable owner = payable(getManagerAdmin(0));
+      address payable owner = payable(_getManagerAdmin(0));
       owner.transfer(_amount);
     }
 
@@ -70,11 +70,13 @@ contract DAONation is DAOManagers, ERC1155Intrading, ERC1155Burnable {
   ************************************************/
 
   function createDao(string memory daoName, uint256 initialSupplyMint, string memory _uri) public payable returns (uint256) {
+    _beforeCreateDAO(daoName);
     super._mint(msg.sender, _daoCount, initialSupplyMint, "0x0");
     return _afterCreateDAO(daoName, _uri);
   }
 
   function createDaowithExtradata(string memory daoName, uint256 initialSupplyMint, string memory _uri, bytes memory data) public payable returns (uint256) {
+    _beforeCreateDAO(daoName);
     super._mint(msg.sender, _daoCount, initialSupplyMint, data);
     return _afterCreateDAO(daoName, _uri);
   }
