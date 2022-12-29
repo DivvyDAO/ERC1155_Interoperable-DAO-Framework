@@ -105,7 +105,7 @@ contract DAONation is DAOManagement, ERC1155Burnable {
   }
 
   function _beforeCreateDAO(string memory daoName) internal returns (bool) {
-    require(!exists(_daoNametoId[daoName]), "DAONation: DAO Tokens already exist under this name. Contact us if there is a branding issue.");
+    require(_daoNametoId[daoName] == 0, "DAONation: DAO Tokens already exist under this name. Contact us if there is a branding issue.");
     require (msg.value >= costToDeployDAO, string(
                     abi.encodePacked(
                       "DAONation: Requires a payment of ", 
@@ -153,7 +153,7 @@ contract DAONation is DAOManagement, ERC1155Burnable {
     * @dev Indicates whether any token exist with a given id, or not.
     */
   function exists(uint256 id) public view virtual returns (bool) {
-      return totalSupply(id) > 0;
+      return DAOmap[id]._totalSupply > 0;
   }
 
   function sellTokens(uint256 id, uint256 quantity, uint256 value) public {
