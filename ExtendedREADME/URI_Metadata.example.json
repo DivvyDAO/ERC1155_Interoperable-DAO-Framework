@@ -1,16 +1,23 @@
 {
-    "who": {
-        "name": "Example DAO",
-        "daoId": 1
-    },
-    "what": {
-        "purpose": "We are here to set an example for others",
-        "measure-of-success": "Others may create their DAO's URI Metadata using this template",
-        "motd": "Lead by example!",
-        "motd-acronym": "Motto of the DAO"
-    },
-    "where": {
-        "website": "http://example.com",
-        "twitter": "example"
-    }
+  "name": "Community Funds",
+  "purpose": "A decentralized platform for organizing and funding community projects.",
+  "website": "https://www.communityfunds.org",
+  "motd": "Carpe Diem",
+  "communicationLinks": [
+    "https://discord.gg/communityfunds",
+    "https://t.me/communityfunds"
+  ],
+  "socialMedia": {
+    "twitter": "https://twitter.com/communityfunds",
+    "reddit": "https://www.reddit.com/r/communityfunds"
+  },
+  "other": {
+    "contractAddress": "0x1234567890abcdef",
+    "organizers": [
+      "Alice",
+      "Bob",
+      "Charlie"
+    ],
+    "legalInfo": "This DAO is organized under the laws of the state of Maine."
+  }
 }
