@@ -24,18 +24,16 @@ Requirements
 
 [-] Make it's own project with GitHub Pages
 
-[-] Create Standard Metadata URI Example
-
-[-] Build DAONation Drupal Module: DAO-specific Token Explorer (From Mint-to-Burn), Web 2.0 .json (think URI), Roster/Address Explorer, 
+[-] Create 4824 Standard Metadata URI Example
 
 [-] Make Upgradeable
 
 [-] Upgrade idea- Update Manager count from 5 to adjustable
 
-[-] CreateDAO payable at 0.0025 ether, all transactions are done via Dyvvy member tokens daoId[1]
+[x] CreateDAO payable at 0.21 ether, all transactions are done via DAONation DAO-tokens daoId[0]
 
 [-] Create manager Vote
 
-[-] Build updateURI function onlyManager
+[x] Build updateURI function onlyManager
 
 [-] Build Identity claims for users //think uport
