@@ -230,7 +230,7 @@ abstract contract DAOManagement is Context, IDAOManagement, ERC165 {
      * Emits a {ManagerAdminChanged} event.
      */
     function _setManagerAdmin(uint256 dao, address adminManager) internal virtual {
-        address previousAdminManager = _getManagerAdmin(dao);
+        address previousAdminManager = owners[dao];
         owners[dao] = adminManager;
         emit ManagerAdminChanged(dao, previousAdminManager, adminManager);
     }
