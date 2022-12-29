@@ -24,7 +24,7 @@ Requirements
 
 [-] Make it's own project with GitHub Pages
 
-[-] Create 4824 Standard Metadata URI Example
+[X] Create 4824 Standard Metadata URI Example
 
 [-] Make Upgradeable
 
