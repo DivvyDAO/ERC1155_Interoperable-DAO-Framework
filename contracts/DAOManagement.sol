@@ -4,7 +4,7 @@
 
 pragma solidity ^0.8.0;
 
-import "./IDAOManagement.sol";
+import "./interfaces/IDAOManagement.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol";

@@ -11,7 +11,7 @@ contract DAONation is DAOManagers, ERC1155Burnable {
   mapping(uint256 => string) public _tokenURIs;
   mapping(uint256 => uint256) private _totalSupply;
 
-    constructor() ERC1155("DAONation.com") {
+    constructor() ERC1155("DAONation.com") payable {
       createDao("DAO Nation", 100000, "http://DAONation.com/metadata/DAONation.json");
       
     }
@@ -64,22 +64,27 @@ contract DAONation is DAOManagers, ERC1155Burnable {
   *
   ************************************************/
 
-  function createDao(string memory daoName, uint256 initialSupplyMint, string memory _uri) public returns (uint256 daoCount) {
+  function createDao(string memory daoName, uint256 initialSupplyMint, string memory _uri) public payable returns (uint256) {
     super._mint(msg.sender, _daoCount, initialSupplyMint, "0x0");
-    _daoNametoId[daoName] = _daoCount;
-    _tokenURIs[_daoCount] = _uri;
-    _grantManager(_daoCount, msg.sender);
-    _daoCount++;
-    return daoCount;
+    return _afterCreateDAO(daoName, _uri);
   }
 
-  function createDaowithExtradata(string memory daoName, uint256 initialSupplyMint, string memory _uri, bytes memory data) public returns (uint256 daoCount) {
+  function createDaowithExtradata(string memory daoName, uint256 initialSupplyMint, string memory _uri, bytes memory data) public payable returns (uint256) {
     super._mint(msg.sender, _daoCount, initialSupplyMint, data);
+    return _afterCreateDAO(daoName, _uri);
+  }
+
+  function _beforeCreateDAO(string memory daoName) internal returns (bool) {
+    require (exists(_daoNametoId[daoName]) == false, "DAONation: Name already exists. Contact us if there is a branding issue.");
+    require (msg.value == 0.21 ether, "DAONation: Requires a payment of 0.21 ether aka. 210 finney");
+    return true;
+  }
+
+  function _afterCreateDAO(string memory daoName, string memory _uri) internal returns (uint256) {
     _daoNametoId[daoName] = _daoCount;
     _tokenURIs[_daoCount] = _uri;
     _grantManager(_daoCount, msg.sender);
-    _daoCount++;
-    return daoCount;
+    return _daoCount++;
   }
 
   function mintDAOtokens(uint256 id, address account, uint256 amount, bytes memory data)
