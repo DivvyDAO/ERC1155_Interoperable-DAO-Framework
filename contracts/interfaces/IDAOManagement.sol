@@ -46,7 +46,7 @@ interface IDAOManagement {
      *
      * To change a role's admin, use {DAOManagement-_setManagerAdmin}.
      */
-    function getManagerAdmin(uint256 dao) external view returns (address);
+    function _getManagerAdmin(uint256 dao) external view returns (address);
 
     /**
      * @dev Grants `role` to `account`.

@@ -30,7 +30,7 @@ contract DAONation is DAOManagement, ERC1155Burnable {
 
     // Obligatory Overrides
   
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC1155, DAOManagers) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC1155, DAOManagement) returns (bool) {
       return ERC1155.supportsInterface(interfaceId);
     }
 
@@ -63,7 +63,7 @@ contract DAONation is DAOManagement, ERC1155Burnable {
                 uint256 amount = amounts[i];
                 uint256 supply = _totalSupply[id];
                 require(supply >= amount, "ERC1155: burn amount exceeds totalSupply");
-                require(supply - _lockedTokens[msg.sender][id] >= amount, "DAONation: burn amount would burn locked tokens");
+                require((supply - _lockedTokens[msg.sender][id]) >= amount, "DAONation: burn amount would burn locked tokens");
                 unchecked {
                     _totalSupply[id] = supply - amount;
                 }
@@ -78,11 +78,13 @@ contract DAONation is DAOManagement, ERC1155Burnable {
   ************************************************/
 
   function createDao(string memory daoName, uint256 initialSupplyMint, string memory _uri) public payable returns (uint256) {
+    _beforeCreateDAO(daoName);
     super._mint(msg.sender, _daoCount, initialSupplyMint, "0x0");
     return _afterCreateDAO(daoName, _uri);
   }
 
   function createDaowithExtradata(string memory daoName, uint256 initialSupplyMint, string memory _uri, bytes memory data) public payable returns (uint256) {
+    _beforeCreateDAO(daoName);
     super._mint(msg.sender, _daoCount, initialSupplyMint, data);
     return _afterCreateDAO(daoName, _uri);
   }

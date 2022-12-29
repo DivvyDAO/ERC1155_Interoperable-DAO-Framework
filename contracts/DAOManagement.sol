@@ -143,7 +143,7 @@ abstract contract DAOManagement is Context, IDAOManagement, ERC165 {
      *
      * To change a Manager role's owner, use {_setManagerAdmin}.
      */
-    function _getManagerAdmin(uint256 dao) internal view virtual returns (address) {
+    function _getManagerAdmin(uint256 dao) external view returns (address) {
         return owners[dao];
     }
 
