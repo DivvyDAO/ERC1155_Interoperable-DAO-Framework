@@ -66,6 +66,11 @@ abstract contract DAOManagers is Context, IDAOManagement, ERC165 {
         _;
     }
 
+    modifier onlyOwner(uint256 dao) {
+        _checkOwner(dao);
+        _;
+    }
+
     /**
      * @dev See {IERC165-supportsInterface}.
      */
@@ -113,13 +118,32 @@ abstract contract DAOManagers is Context, IDAOManagement, ERC165 {
         }
     }
 
+    function _checkOwner(uint256 dao) internal view virtual {
+        _checkOwner(dao, msg.sender);
+    }
+
+
+    function _checkOwner(uint256 dao, address account) internal view virtual {
+        if (owners[dao] != account) {
+            revert(
+                string(
+                    abi.encodePacked(
+                        "DAOManagement: account ",
+                        Strings.toHexString(account),
+                        " is missing Owner role. "
+                        )
+                    )
+                );
+        }
+    }
+
     /**
      * @dev Returns the owner role that controls `Manager role`. See {grantManager} and
      * {revokeManager}.
      *
      * To change a Manager role's owner, use {_setManagerAdmin}.
      */
-    function getManagerAdmin(uint256 dao) public view virtual returns (address) {
+    function _getManagerAdmin(uint256 dao) internal view virtual returns (address) {
         return owners[dao];
     }
 
@@ -206,7 +230,7 @@ abstract contract DAOManagers is Context, IDAOManagement, ERC165 {
      * Emits a {ManagerAdminChanged} event.
      */
     function _setManagerAdmin(uint256 dao, address adminManager) internal virtual {
-        address previousAdminManager = getManagerAdmin(dao);
+        address previousAdminManager = _getManagerAdmin(dao);
         owners[dao] = adminManager;
         emit ManagerAdminChanged(dao, previousAdminManager, adminManager);
     }
