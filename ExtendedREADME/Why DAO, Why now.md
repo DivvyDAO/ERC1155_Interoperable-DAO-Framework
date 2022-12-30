@@ -17,7 +17,7 @@ What are DAOs? {#what-are-daos}
 
 Why do we need DAOs? {#why-dao}
 
-## What are DAOs? {#what-are-daos}
+## What are DAOs?
 
 A DAO is a collectively-owned, blockchain-governed organization working towards a shared mission.
 
