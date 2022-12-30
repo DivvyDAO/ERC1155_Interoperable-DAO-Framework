@@ -53,7 +53,7 @@ This is possible because smart contracts are tamper-proof once they go live on E
   More on smart contracts
 </DocLink>
 
-## Ethereum and DAOs {#ethereum-and-daos}
+## Ethereum and DAOs
 
 Ethereum is the perfect foundation for DAOs for a number of reasons:
 
