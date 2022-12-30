@@ -11,6 +11,11 @@ summaryPoint1: Member-owned communities without centralized leadership.
 summaryPoint2: A safe way to collaborate with internet strangers.
 summaryPoint3: A safe place to commit funds to a specific cause.
 ---
+Contents:
+
+What are DAOs? {#what-are-daos}
+
+Why do we need DAOs? {#why-dao}
 
 ## What are DAOs? {#what-are-daos}
 
